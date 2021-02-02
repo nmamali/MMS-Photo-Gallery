@@ -2,8 +2,10 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
+import LogInScreen from '../screens/LogInScreen';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 import { RootStackParamList } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -14,7 +16,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -27,8 +29,12 @@ const Stack = createStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      
+      <Stack.Screen name="Login" component={LogInScreen} options={{ title: 'Login!' }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'SignUp!' }} />
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+
     </Stack.Navigator>
   );
 }
