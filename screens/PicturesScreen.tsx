@@ -1,27 +1,30 @@
-import React,{useEffect,useState} from 'react';
-import { StyleSheet, Text, View , FlatList, TouchableOpacity,ImageBackground } from 'react-native';
-import { Camera } from 'expo-camera';
-import { getDataFromAsync ,storeData} from "../utils";
-import { Item } from 'native-base';
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
+import { Camera } from "expo-camera";
+import { getDataFromAsync, storeData } from "../utils";
+import { Item } from "native-base";
 import { useFocusEffect } from "@react-navigation/native";
 
+export default function PicturesScreen({ navigation }: any) {
+  const [list, setList] = useState([]);
 
-
-export default function PicturesScreen({navigation}:any) {
-  const [list, setList] = useState([])
-  
-  useEffect(() => {
-  }, [navigation]);
+  useEffect(() => {}, [navigation]);
   useFocusEffect(
     React.useCallback(() => {
-      getDataFromAsync("Pictures").then(res=>{
-        setList(res)
-        console.log(res)
-      })
+      getDataFromAsync("Pictures").then((res) => {
+        setList(res);
+        console.log(res);
+      });
       return () => null;
     }, [navigation])
   );
-
 
   return (
     <View style={styles.container}>
@@ -29,16 +32,19 @@ export default function PicturesScreen({navigation}:any) {
         contentContainerStyle={{
           backgroundColor: "#FFFFFF",
           borderRadius: 30,
-
         }}
         initialNumToRender={3}
         maxToRenderPerBatch={5}
         windowSize={4}
         data={list}
         numColumns={2}
-        renderItem={({item})=><CameraPreview photo={item?.photo} dateCaptured={item?.dateCaptured}/>}
+        renderItem={({ item }) => (
+          <CameraPreview
+            photo={item?.photo}
+            dateCaptured={item?.dateCaptured}
+          />
+        )}
       />
-
     </View>
   );
 }
@@ -51,32 +57,31 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
   },
 });
 
-
-const CameraPreview = ({photo, dateCaptured}: any) => {
+const CameraPreview = ({ photo, dateCaptured }: any) => {
   return (
-    <View style={{
-      paddingHorizontal:10,
-      borderRadius: 5,
-      marginTop:8
-
-      }}>
+    <View
+      style={{
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        marginTop: 8,
+      }}
+    >
       <ImageBackground
-        imageStyle={{ borderRadius: 6}}
-
-        source={{uri: photo && photo.uri}}
+        imageStyle={{ borderRadius: 6 }}
+        source={{ uri: photo && photo.uri }}
         style={{
           flex: 1,
-          width:165,
-          height:170,
+          width: 165,
+          height: 170,
           marginVertical: 5,
           backgroundColor: "#333",
           borderRadius: 30,
@@ -89,35 +94,30 @@ const CameraPreview = ({photo, dateCaptured}: any) => {
         <View
           style={{
             flex: 1,
-            flexDirection: 'column',
+            flexDirection: "column",
             padding: 15,
-            justifyContent: 'flex-end',
-
+            justifyContent: "flex-end",
           }}
         >
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-
-
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
-          >
-          </View>
+          ></View>
         </View>
       </ImageBackground>
-      <View style={{marginHorizontal:5}}>
-      <Text style={{fontWeight:"bold", color:"grey"}}>
-        Date Captured: {new Date(dateCaptured).getFullYear() }-{new Date(dateCaptured).getMonth()}-{new Date(dateCaptured).getDay() }
-      </Text>
-    
-      <Text style={{fontWeight:"bold", color:"grey"}}>
-        Time Taken: {new Date(dateCaptured).getHours() }:{new Date(dateCaptured).getMinutes()}
+      <View style={{ marginHorizontal: 5 }}>
+        <Text style={{ fontWeight: "bold", color: "grey" }}>
+          Date Captured: {new Date(dateCaptured).getFullYear()}-
+          {new Date(dateCaptured).getMonth()}-{new Date(dateCaptured).getDay()}
+        </Text>
 
-      </Text>
-
+        <Text style={{ fontWeight: "bold", color: "grey" }}>
+          Time Taken: {new Date(dateCaptured).getHours()}:
+          {new Date(dateCaptured).getMinutes()}
+        </Text>
       </View>
-
     </View>
-  )
-}
+  );
+};
