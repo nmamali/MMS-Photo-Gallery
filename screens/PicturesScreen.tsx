@@ -40,6 +40,7 @@ export default function PicturesScreen({ navigation }: any) {
         numColumns={2}
         renderItem={({ item }) => (
           <CameraPreview
+          navigation={navigation}
             photo={item?.photo}
             dateCaptured={item?.dateCaptured}
           />
@@ -66,9 +67,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const CameraPreview = ({ photo, dateCaptured }: any) => {
+const CameraPreview = ({ photo, dateCaptured, navigation }: any) => {
   return (
-    <View
+    <TouchableOpacity
+      onPress={()=>
+        {
+          navigation.navigate("Preview");
+          storeData('preview', photo)
+        }
+      
+      
+      }
       style={{
         paddingHorizontal: 10,
         borderRadius: 5,
@@ -118,6 +127,6 @@ const CameraPreview = ({ photo, dateCaptured }: any) => {
           {new Date(dateCaptured).getMinutes()}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

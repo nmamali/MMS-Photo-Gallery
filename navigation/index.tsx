@@ -7,6 +7,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 import LogInScreen from "../screens/LogInScreen";
+import PhotoPreviewScreen from "../screens/PhotoPreviewScreen";
+
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SignUpScreen from "../screens/SignUpScreen";
@@ -54,6 +56,20 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
       />
+        <Stack.Screen
+        name="Preview"
+        component={PhotoPreviewScreen}
+        options={{
+          title: "Photo Preview",
+          headerShown: true,
+          headerBackTitle: "Pictures",
+          headerStyle: {
+            backgroundColor: "#FFF",
+          },
+        }}
+      />
+
+
     </Stack.Navigator>
   );
 }
