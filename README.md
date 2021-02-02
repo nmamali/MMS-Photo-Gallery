@@ -8,8 +8,7 @@
 
 2.  clone the repo locally
 
-        git clone git@github.com:polymorph001/one-day-only.git
-
+git@github.com:fhulufheloPolymorph/MMS-Photo-Gallery.git
 3.  install the dependencies:
 
         cd MMS-Photo-Gallery
