@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import * as React from 'react';
+import  React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,12 +11,42 @@ import {
    TouchableOpacity,
     Image,
    ImageBackground} from 'react-native';
+   import * as firebase from 'firebase';
+
 import { RootStackParamList } from '../types';
 import { Fontisto } from "@expo/vector-icons";
-import { Button, Content } from 'native-base';
+import { Button, Content,Spinner } from 'native-base';
 export default function LogInScreen({
   navigation,
 }: StackScreenProps<RootStackParamList, 'NotFound'>) {
+
+
+
+  const [email, setEmail ] = useState("dev@gmail.com");
+  const [password, setPassword ] = useState("123456");
+  const [error, setError] = useState('');
+  const [loading , setLoading]  =  useState(false);
+
+
+  const navigateApp =  async () => {
+
+    try{
+      setLoading(true);
+      firebase.auth().signInWithEmailAndPassword(email, password).then(r =>{
+        navigation.replace("Root")
+      })
+        .catch(e=>{
+          alert(JSON.stringify(e.message))
+          setLoading(false) 
+               })
+    }catch (e) {
+      alert(JSON.stringify(e.message))
+      setLoading(false)
+        }
+  };
+
+
+
 
   const EmailIcon = () => (
     <Fontisto style= {{marginLeft: 10}} color= "#ebeff5" name={"email"} size={18}/>
@@ -24,9 +54,6 @@ export default function LogInScreen({
   const PasswordIcon = () => (
     <Fontisto style= {{marginLeft: 10}} color= "#ebeff5" name={"locked"} size={18}/>
   )
-  
-
-
 
   return (
     <View style={styles.container}>
@@ -39,6 +66,8 @@ export default function LogInScreen({
             placeholderTextColor = {"#ebeff5"}
             placeholder="Email"
             autoCapitalize = 'none'
+            onChangeText={text => setEmail(text)}
+
            />
         </View>
         <View style={styles.inputView}>
@@ -48,20 +77,27 @@ export default function LogInScreen({
             style={styles.inputText}
             placeholderTextColor = {"#ebeff5"}
             placeholder="Password"
+            onChangeText={text => setPassword(text)}
+
            />
         </View>
         
         <View>
 
         </View>
-          <Button style={styles.loginBtn}>
-            <Text style={{color:"#FFF"}}>LOGIN</Text>
+        {!loading && <>
+        <Button style={styles.loginBtn} onPress={()=>navigateApp()}>
+          <Text style={{color:"#FFF"}}>SignUp</Text>
           </Button> 
        
         <TouchableOpacity onPress={()=>navigation.navigate('SignUp')}>
           <Text style={styles.SignUpText}>Create New Account</Text>
         </TouchableOpacity>
-
+        </>}
+        {
+          loading && <Spinner color="#B32120"/>
+        }
+       
 
     </View>
   );
