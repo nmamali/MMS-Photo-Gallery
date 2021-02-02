@@ -29,6 +29,7 @@ export default function LogInScreen({
 
 
   const navigateApp =  async () => {
+    navigation.replace("Root")
 
     try{
       setLoading(true);
