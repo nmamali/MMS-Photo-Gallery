@@ -1,15 +1,49 @@
 import {StatusBar} from 'expo-status-bar'
-import React from 'react'
-import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native'
+import React , {useEffect} from 'react'
+import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image,Platform} from 'react-native'
 import {Camera} from 'expo-camera'
-import { BackgroundColorDirective } from 'angular-admin-lte/lib/color/color.directive'
-let camera: Camera
-export default function CameraScreen() {
+import { getDataFromAsync ,storeData} from "../utils";
+import { useFocusEffect } from "@react-navigation/native";
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+
+
+let camera: Camera 
+export default function CameraScreen({navigation}:any) {
   const [startCamera, setStartCamera] = React.useState(false)
   const [previewVisible, setPreviewVisible] = React.useState(false)
   const [capturedImage, setCapturedImage] = React.useState<any>(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
+  const [image, setImage] = React.useState(null);
+
+
+  useEffect(() => {
+  }, [navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setStartCamera(false)
+      setPreviewVisible(false)
+      setCapturedImage(null)
+      return () => null;
+    }, [navigation])
+  );
+
+    useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+
+
+ 
+
+
 
   const __startCamera = async () => {
     const {status} = await Camera.requestPermissionsAsync()
@@ -22,14 +56,40 @@ export default function CameraScreen() {
   }
   const __takePicture = async () => {
     const photo: any = await camera.takePictureAsync()
-    console.log(photo)
     setPreviewVisible(true)
-    //setStartCamera(false)
+    // setStartCamera(false)
     setCapturedImage(photo)
+    console.log(photo)
+
+
   }
-  const __savePhoto = (photo: string) => {
-    alert(JSON.stringify(photo))
+  const __savePhoto = (photo: any) => {
+    const pic = {
+      photo: photo,
+      dateCaptured: new Date()
+    };
+    getDataFromAsync('Pictures').then((res)=>{
+      storeData('Pictures',[... res,pic ])
+      alert('Saved')
+    })
   }
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    __savePhoto(result)
+
+    if (!result.cancelled) {
+      setImage(result?.uri);
+    }
+  };
+
+
   const __retakePicture = () => {
     setCapturedImage(null)
     setPreviewVisible(false)
@@ -189,6 +249,33 @@ export default function CameraScreen() {
               Take picture
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={()=>{pickImage()}}
+            style={{
+              width: 250,
+              borderRadius: 4,
+              backgroundColor: '#B32120',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 50,
+              marginTop:20
+            }}
+          >
+            <Text
+              style={{
+                color: '#fff',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}
+            >
+              Browser Image From Gallery
+            </Text>
+          </TouchableOpacity>
+
+
+
         </View>
       )}
 
@@ -256,7 +343,7 @@ const CameraPreview = ({photo, retakePicture, savePhoto}: any) => {
                   fontSize: 20
                 }}
               >
-                Replace
+                Take More
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
