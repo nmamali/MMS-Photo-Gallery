@@ -1,5 +1,8 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import * as React from 'react';
+import React , { useState } from 'react';
+import * as firebase from 'firebase';
+require('firebase/auth');
+
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,10 +16,48 @@ import {
    ImageBackground} from 'react-native';
 import { RootStackParamList } from '../types';
 import { Fontisto } from "@expo/vector-icons";
-import { Button, Content } from 'native-base';
+import { Button, Content, Spinner } from 'native-base';
 export default function SignUpScreen({
   navigation,
 }: StackScreenProps<RootStackParamList, 'NotFound'>) {
+
+  const [email, setEmail ] = useState("");
+  const [password, setPassword ] = useState("");
+  const [confirmPassword, setConfirmPassword ] = useState("");
+  const [loading, setLoading] = useState(false)
+
+  const navigateApp =  () => {
+    setLoading(true)
+
+      if(!email.includes("@")){
+        alert('Invalid Email')
+        setLoading(false)
+        return;
+      }
+      if(password.length<6){
+        alert('Password must be greater than 6 characters')
+        setLoading(false)
+        return;
+      } else if(password !== confirmPassword){
+        alert('Passwords do not match')
+        setLoading(false)
+        return;
+      }
+      else{
+        firebase.auth().createUserWithEmailAndPassword(email, password).then((res)=>{
+          navigation.replace('Root')
+        })
+        .catch((e)=>{
+          alert(JSON.stringify(e))
+          setLoading(false)
+
+        })
+      }
+      setLoading(false)
+
+  }
+
+
 
   const EmailIcon = () => (
     <Fontisto style= {{marginLeft: 10}} color= "#ebeff5" name={"email"} size={18}/>
@@ -24,9 +65,6 @@ export default function SignUpScreen({
   const PasswordIcon = () => (
     <Fontisto style= {{marginLeft: 10}} color= "#ebeff5" name={"locked"} size={18}/>
   )
-  
-
-
 
   return (
     <View style={styles.container}>
@@ -39,6 +77,8 @@ export default function SignUpScreen({
             placeholderTextColor = {"#ebeff5"}
             placeholder="Email"
             autoCapitalize = 'none'
+            onChangeText={text => setEmail(text)}
+
            />
         </View>
         <View style={styles.inputView}>
@@ -48,6 +88,8 @@ export default function SignUpScreen({
             style={styles.inputText}
             placeholderTextColor = {"#ebeff5"}
             placeholder="Password"
+            onChangeText={text => setPassword(text)}
+
            />
         </View>
 
@@ -58,6 +100,8 @@ export default function SignUpScreen({
             style={styles.inputText}
             placeholderTextColor = {"#ebeff5"}
             placeholder="Confirm Password"
+            onChangeText={text => setConfirmPassword(text)}
+
            />
         </View>
         <View>
@@ -66,13 +110,19 @@ export default function SignUpScreen({
 
         </View>
 
-          <Button style={styles.loginBtn}>
+        {!loading && <>
+        <Button style={styles.loginBtn} onPress={()=>navigateApp()}>
           <Text style={{color:"#FFF"}}>SignUp</Text>
           </Button> 
        
         <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
           <Text style={styles.SignUpText}>Already have an account, Login?</Text>
         </TouchableOpacity>
+        </>}
+        {
+          loading && <Spinner color="#B32120"/>
+        }
+
 
 
     </View>
