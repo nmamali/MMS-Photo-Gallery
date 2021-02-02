@@ -6,9 +6,10 @@
 
         yarn global add expo-cli
 
-2.  clone the repo locally
+2.  clone the repo locally: 
 
-git@github.com:fhulufheloPolymorph/MMS-Photo-Gallery.git
+        git@github.com:fhulufheloPolymorph/MMS-Photo-Gallery.git
+
 3.  install the dependencies:
 
         cd MMS-Photo-Gallery
