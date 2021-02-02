@@ -48,7 +48,7 @@ export default function SignUpScreen({
           navigation.replace('Root')
         })
         .catch((e)=>{
-          alert(JSON.stringify(e))
+          alert(JSON.stringify(e.message))
           setLoading(false)
 
         })

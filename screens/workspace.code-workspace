@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "EasyCareerGo",
+			"path": "../../EasyCareerGo"
+		},
+		{
+			"name": "EasyCareerGoAdmin",
+			"path": "../../WebstormProjects/EasyCareerGoAdmin"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
