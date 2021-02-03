@@ -11,6 +11,7 @@ import { Camera } from "expo-camera";
 import { getDataFromAsync, storeData } from "../utils";
 import { Item } from "native-base";
 import { useFocusEffect } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function PicturesScreen({ navigation }: any) {
   const [list, setList] = useState([]);
@@ -18,6 +19,7 @@ export default function PicturesScreen({ navigation }: any) {
   useEffect(() => {}, [navigation]);
   useFocusEffect(
     React.useCallback(() => {
+      // storeData("Pictures",[])
       getDataFromAsync("Pictures").then((res) => {
         setList(res);
         console.log(res);
@@ -38,6 +40,45 @@ export default function PicturesScreen({ navigation }: any) {
         windowSize={4}
         data={list}
         numColumns={2}
+        ListEmptyComponent={()=>
+          <View style={{ backgroundColor: "#fff", flex: 1 }}>
+          <View style={styles.emptyContainer}>
+            <FontAwesome
+              name={"question-circle"}
+              size={100}
+              color={"#B32120"}
+            />
+            <Text style={styles.cardText}>OOPS</Text>
+            <Text style={styles.bodyText}>No saved Pond Images</Text>
+
+            <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Camera")
+            }}
+            style={{
+              width: 250,
+              borderRadius: 4,
+              backgroundColor: "#B32120",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              height: 50,
+              marginTop: 20,
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              Record Images
+            </Text>
+          </TouchableOpacity>
+          </View>
+        </View>
+        }
         renderItem={({ item }) => (
           <CameraPreview
           navigation={navigation}
@@ -51,11 +92,34 @@ export default function PicturesScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    marginVertical: 120,
+    padding: 20,
+    borderRadius: 6,
+    elevation: 3,
+    backgroundColor: "#fff",
+    shadowRadius: 2,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  cardText: {
+    color: "grey",
+    fontSize: 25,
+    alignSelf: "center",
+  },
+  bodyText: {
+    color: "grey",
+    fontSize: 16,
+    textAlign: "center",
+    alignSelf: "center",
+    marginVertical: 20,
+  },
   container: {
     flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
   },
+  
   title: {
     fontSize: 20,
     fontWeight: "bold",
