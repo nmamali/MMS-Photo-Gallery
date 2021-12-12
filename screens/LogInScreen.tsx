@@ -1,28 +1,26 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import {
-  SafeAreaView,
   StyleSheet,
   View,
-  Platform,
-  ScrollView,
-  TextInput,
   Text,
   TouchableOpacity,
   Image,
-  ImageBackground,
 } from "react-native";
 import * as firebase from "firebase";
 
 import { RootStackParamList } from "../types";
-import { Fontisto } from "@expo/vector-icons";
-import { Button, Content, Spinner } from "native-base";
+import {Fontisto} from "@expo/vector-icons";
+
+import { Button, Spinner } from "native-base";
+import theme from "../assets/theme";
+import DDTextInput from "../components/DDTextInput";
+import DDButton from "../components/DDButton";
 export default function LogInScreen({
   navigation,
 }: StackScreenProps<RootStackParamList, "NotFound">) {
   const [email, setEmail] = useState("dev@gmail.com");
   const [password, setPassword] = useState("123456");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigateApp = async () => {
@@ -48,7 +46,7 @@ export default function LogInScreen({
   const EmailIcon = () => (
     <Fontisto
       style={{ marginLeft: 10 }}
-      color="#ebeff5"
+      color={theme.orange}
       name={"email"}
       size={18}
     />
@@ -56,7 +54,7 @@ export default function LogInScreen({
   const PasswordIcon = () => (
     <Fontisto
       style={{ marginLeft: 10 }}
-      color="#ebeff5"
+      color={theme.orange}
       name={"locked"}
       size={18}
     />
@@ -65,45 +63,23 @@ export default function LogInScreen({
   return (
     <View style={styles.container}>
       <Image
-        style={{ width: 300, height: 220 }}
+        style={{ width: 400 , height: 100}}
         resizeMode={"contain"}
-        source={require("../assets/images/logo2.png")}
+        source={require("../assets/images/mainLogo.png")}
       />
 
-      <View style={styles.inputView}>
-        <EmailIcon />
-        <TextInput
-          style={styles.inputText}
-          placeholderTextColor={"#ebeff5"}
-          placeholder="Email"
-          autoCapitalize="none"
-          onChangeText={(text) => setEmail(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <PasswordIcon />
-        <TextInput
-          secureTextEntry
-          style={styles.inputText}
-          placeholderTextColor={"#ebeff5"}
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-        />
-      </View>
-
-      <View></View>
+      <DDTextInput icon={ <EmailIcon/>} onTextChange={setEmail} placeholder={"Email"}/>
+      <DDTextInput icon={  <PasswordIcon />} onTextChange={setPassword} placeholder={"Password"}/>
+      <View/>
       {!loading && (
         <>
-          <Button style={styles.loginBtn} onPress={() => navigateApp()}>
-            <Text style={{ color: "#FFF" }}>SignUp</Text>
-          </Button>
-
+          <DDButton onSubmit={navigateApp} text={"Login"}/>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text style={styles.SignUpText}>Create New Account</Text>
           </TouchableOpacity>
         </>
       )}
-      {loading && <Spinner color="#B32120" />}
+      {loading && <Spinner color={theme.orange} />}
     </View>
   );
 }
@@ -136,18 +112,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#B32120",
+    backgroundColor: "#FFF",
     borderRadius: 10,
     height: 50,
-    borderBottomWidth: 0,
     margin: 10,
     marginLeft: 10,
+    borderColor: theme.orange,
+    borderWidth: 0.6
   },
   inputText: {
     flex: 1,
     height: 50,
     padding: 10,
-    color: "#ebeff5",
+    color: theme.darkestGrey,
   },
   forgot: {
     color: "#B32120",
@@ -162,11 +139,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     marginBottom: 40,
-    backgroundColor: "#B32120",
+    backgroundColor: theme.white,
     marginHorizontal: 30,
+    borderWidth: 0.6,
+    borderColor: theme.orange
   },
   SignUpText: {
-    color: "#B32120",
+    color: theme.orange,
     fontSize: 15,
     textDecorationLine: "underline",
   },
